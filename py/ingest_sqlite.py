@@ -6,9 +6,9 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TXT_PATH = ROOT / "data" / "household_power_consumption.txt"
-DB_PATH  = ROOT / "data" / "housepower.sqlite"
-SCHEMA_PATH = ROOT / "sql" / "00_schema.sql"
+TXT_PATH = ROOT / 'data' / 'household_power_consumption.txt'
+DB_PATH  = ROOT / 'data' / 'housepower.sqlite'
+SCHEMA_PATH = ROOT / 'sql' / '00_schema.sql'
 
 
 def main():
