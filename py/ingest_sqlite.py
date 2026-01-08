@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-import sqlite_utils as utils
+from py import sqlite_utils as utils
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,9 +19,10 @@ def main():
         format='%d/%m/%Y %H:%M:%S',
         errors='coerce'
     )
+    
+    n_empty_ts = time_index.isna().sum()
     df = df.loc[time_index.notna()].copy()
     time_index = time_index.loc[time_index.notna()]
-    n_empty_ts = time_index.isna().sum()
 
     df.drop(['Date', 'Time'], axis=1, inplace=True)
     df.insert(0, 'ts', time_index.dt.strftime('%Y-%m-%d %H:%M:%S'))
@@ -35,9 +36,16 @@ def main():
         'Sub_metering_3': 'sub_3'
     }, axis=1, inplace=True)
 
-    utils.execute_sql_script(SCHEMA_PATH.read_text())
     with utils.connect_sqlite() as conn:
-        n_rows_inserted = df.to_sql('raw_power', conn, index=False, if_exists='append', method='multi', chunksize=30_000)
+        utils.execute_sql_script(SCHEMA_PATH.read_text(), conn=conn)
+        n_rows_inserted = df.to_sql(
+            'raw_power',
+            conn,
+            index=False,
+            if_exists='append',
+            method='multi',
+            chunksize=30_000
+        )
     
     print(f'Read {n_rows_read} rows, found {n_empty_ts} empty timestamps, inserted {n_rows_inserted} rows.')
 
