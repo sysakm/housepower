@@ -1,13 +1,13 @@
 # Expects to be executed from the parent folder
 from pathlib import Path
-import sqlite3
 
 import pandas as pd
+
+import sqlite_utils as utils
 
 
 ROOT = Path(__file__).resolve().parents[1]
 TXT_PATH = ROOT / 'data' / 'household_power_consumption.txt'
-DB_PATH  = ROOT / 'data' / 'housepower.sqlite'
 SCHEMA_PATH = ROOT / 'sql' / '00_schema.sql'
 
 
@@ -35,13 +35,11 @@ def main():
         'Sub_metering_3': 'sub_3'
     }, axis=1, inplace=True)
 
-    conn = sqlite3.connect(DB_PATH)
-    conn.executescript(SCHEMA_PATH.read_text())
-
-    n_rows_inserted = df.to_sql('raw_power', conn, index=False, if_exists='append', method='multi', chunksize=30_000)
+    utils.execute_sql_script(SCHEMA_PATH.read_text())
+    with utils.connect_sqlite() as conn:
+        n_rows_inserted = df.to_sql('raw_power', conn, index=False, if_exists='append', method='multi', chunksize=30_000)
+    
     print(f'Read {n_rows_read} rows, found {n_empty_ts} empty timestamps, inserted {n_rows_inserted} rows.')
-
-    conn.close()
 
 
 if __name__ == '__main__':
