@@ -16,6 +16,14 @@ SELECT
     SUM(sub_2) AS sub_2_wh_obs,
     SUM(sub_3) AS sub_3_wh_obs,
 
+    -- Sub-metering: estimate full-hour values
+    CASE WHEN COUNT(global_active_power) > 10
+    THEN SUM(sub_1) * (60.0 / COUNT(global_active_power)) ELSE NULL END AS sub_1_wh_est,
+    CASE WHEN COUNT(global_active_power) > 10
+    THEN SUM(sub_2) * (60.0 / COUNT(global_active_power)) ELSE NULL END AS sub_2_wh_est,
+    CASE WHEN COUNT(global_active_power) > 10
+    THEN SUM(sub_3) * (60.0 / COUNT(global_active_power)) ELSE NULL END AS sub_3_wh_est,
+
     -- Minute coverage
     COUNT(*) AS n_minute_rows,
     COUNT(global_active_power) AS n_nonempty_rows,
