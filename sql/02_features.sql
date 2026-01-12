@@ -116,6 +116,5 @@ lags AS (
 		LAG(unmetered_wh_est_from_est, 1) OVER (ORDER BY hour) AS unmetered_wh_est_from_est_lag1
 	FROM enriched
 )
-SELECT * FROM lags
-WHERE y_kw_mean IS NOT NULL;
+SELECT * FROM lags;
 CREATE INDEX IF NOT EXISTS idx_power_features_hour ON power_features(hour);

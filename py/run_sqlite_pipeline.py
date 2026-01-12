@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_LIST = [
     ROOT / 'sql' / '01_hourly.sql',
     ROOT / 'sql' / '02_features.sql',
+    ROOT / 'sql' / '03_train_test_split.sql',
     # Following scripts
 ]
 
