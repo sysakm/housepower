@@ -5,7 +5,8 @@ from py import sqlite_utils as utils
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_LIST = [
-    ROOT / 'sql' / '01_hourly.sql'
+    ROOT / 'sql' / '01_hourly.sql',
+    ROOT / 'sql' / '02_features.sql',
     # Following scripts
 ]
 

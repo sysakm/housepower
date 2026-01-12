@@ -32,4 +32,4 @@ SELECT
     THEN 1 ELSE 0 END AS is_full_data_hour
 FROM raw_power
 GROUP BY hour;
-CREATE INDEX IF NOT EXISTS idx_power_hourly_hour ON power_hourly(hour)
+CREATE INDEX IF NOT EXISTS idx_power_hourly_hour ON power_hourly(hour);
