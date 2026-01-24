@@ -2,6 +2,7 @@
 .vscode/*
 __pycache__/*
 */__pycache__/*
+catboost_info/*
 
 data/*
 !data/.gitkeep
