@@ -105,6 +105,14 @@ Expected DataFrame format (hourly timestamps as `YYYY-MM-DD HH:00:00`):
 }
 ```
 
+## Notebooks
+
+Training and reporting are done in notebooks:
+
+- `EDA.ipynb` - sanity checks, data validation, target and missing values distribution.
+- `predictions.ipynb` / `predictions_mae.ipynb` - baselines + CatBoost models training, write predictions to SQLite.
+- `report.ipynb` - metrics, error slices (hour/day/month), offline would-alert simulation.
+
 ## Repo Structure
 
 ```
@@ -129,41 +137,3 @@ report.ipynb
 requirements.txt
 README.md
 ```
-
-## What's inside
-
-### Tables / views
-
-- `raw_power`  
-  Minute-level ingested data (numeric columns + timestamp `ts`).
-
-- `power_hourly`  
-  Hourly aggregation. Target is `y_kw_mean = AVG(global_active_power)` per hour.  
-  Also includes hourly sums for sub-metering and completeness flags.
-
-- `power_features`  
-  Feature table built in SQL (lags/rollings/time features). NULLs are allowed (tree models handle missing values).
-
-- `power_features_train`, `power_features_test`  
-  Time-based split views.
-
-- `model_predictions`  
-  Long format predictions (`model_name`, `model_ver`, `hour`, `pred_value`).
-
-### Notebooks
-
-Training and reporting are done in notebooks:
-
-- `EDA.ipynb` - sanity checks, data validation, target and missing values distribution
-- `predictions.ipynb` / `predictions_mae.ipynb` - baselines + CatBoost models training, write predictions to SQLite
-- `report.ipynb` - metrics, error slices, would-alert simulation
-
-### Would-alert simulation (offline)
-
-Alerts are simulated on the **test** subset:
-
-- Calibrate threshold on train residuals:  
-  `threshold = q95(|y - y_pred|)` on train.
-- Alert: `|error| > threshold` on labeled test hours.
-- Missing ground truth hours are excluded from scoring and tracked separately as data availability gaps.
-- Alert hours are grouped into incidents by consecutive timestamps.
