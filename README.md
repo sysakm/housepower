@@ -94,7 +94,7 @@ Runs SQL scripts to create:
 ### 3) Train models and write predictions
 
 Training is done in notebooks. Predictions are inserted into SQLite via helper:
-`py.sqlite_utils.insert_predictions(model_name, df, ...)`
+`py.sqlite_utils.insert_predictions(pred_df, model_name)`
 
 Expected DataFrame format (hourly timestamps as `YYYY-MM-DD HH:00:00`):
 

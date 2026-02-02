@@ -1,3 +1,4 @@
+"""Run the SQLite SQL pipeline to build hourly aggregates, features, and views."""
 from pathlib import Path
 
 from py import sqlite_utils as utils
@@ -8,12 +9,12 @@ SCRIPT_LIST = [
     ROOT / 'sql' / '01_hourly.sql',
     ROOT / 'sql' / '02_features.sql',
     ROOT / 'sql' / '03_train_test_split.sql',
-    ROOT / 'sql' / '04_predictions.sql',
-    # Following scripts
+    ROOT / 'sql' / '04_predictions.sql'
 ]
 
 
 def main():
+    """Execute the SQL scripts in order to build tables/views used by notebooks."""
     with utils.connect_sqlite() as conn:
         for src_path in SCRIPT_LIST:
             utils.execute_sql_script(src_path.read_text(), conn=conn)

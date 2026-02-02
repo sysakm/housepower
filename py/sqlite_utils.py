@@ -10,10 +10,12 @@ DB_PATH = ROOT / "data" / "housepower.sqlite"
 
 
 def connect_sqlite():
+    """Return a sqlite3 connection to the project database."""
     return sqlite3.connect(DB_PATH)
 
 
 def execute_sql_query(query, conn=None) -> pd.DataFrame:
+    """Execute a SELECT query and return results as a pandas DataFrame."""
     ctx = connect_sqlite() if conn is None else nullcontext(conn)
     with ctx as c:
         cur = c.execute(query)
@@ -23,12 +25,21 @@ def execute_sql_query(query, conn=None) -> pd.DataFrame:
 
 
 def execute_sql_script(script, conn=None):
+    """Execute a multi-statement SQL script against SQLite."""
     ctx = connect_sqlite() if conn is None else nullcontext(conn)
     with ctx as c:
         c.executescript(script)
 
 
 def insert_predictions(pred_df, model_name, conn=None):
+    """
+    Insert model predictions into the `model_predictions` table.
+
+    Arguments:
+    pred_df: DataFrame, must include columns: `hour` (YYYY-MM-DD HH:00:00 strings) and `pred_value`.
+    model_name: str, model identifier used to version prediction batches.
+    conn: sqlite3.Connection (optional), existing database connection; if None, a new one is created.
+    """
     model_version = execute_sql_query(f"""
     SELECT COALESCE(
         (SELECT MAX(model_ver)

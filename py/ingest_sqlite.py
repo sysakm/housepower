@@ -1,4 +1,4 @@
-# Expects to be executed from the parent folder
+"""Ingest the UCI household power text file into SQLite as raw minute data."""
 from pathlib import Path
 
 import pandas as pd
@@ -12,6 +12,7 @@ SCHEMA_PATH = ROOT / 'sql' / '00_schema.sql'
 
 
 def main():
+    """Read the raw text file, clean timestamps, and insert into `raw_power`."""
     df = pd.read_csv(TXT_PATH, sep=';', na_values='?')
     n_rows_read = len(df)
     time_index = pd.to_datetime(
